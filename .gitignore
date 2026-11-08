@@ -1,0 +1,15 @@
+project_english.md
+
+# dev clutter 
+node_modules/
+.vscode/
+*.log
+Thumbs.db
+Desktop.ini
+
+# build.o
+dist/
+
+# dist
+*.zip
+*.rar

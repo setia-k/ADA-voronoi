@@ -1,0 +1,20 @@
+{
+  "name": "voronoi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "typecheck": "tsc",
+    "build": "tsc && esbuild src/index.ts --bundle --format=iife --target=es2020 --outfile=dist/app.js",
+    "watch": "esbuild src/index.ts --bundle --format=iife --target=es2020 --outfile=dist/app.js --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "typescript": "^7.0.2"
+  }
+}
