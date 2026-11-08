@@ -20,12 +20,16 @@
       <fieldset aria-label="Input">
         <button type="button" id="btnLoadInput">Load input file</button>
         <input type="file" id="fileInput" accept=".in,.txt" hidden aria-label="Input file">
-        <button type="button" id="btnNextCase">Next case</button>
-        <output id="caseInfo">No file loaded</output>
+        <select id="caseSelect" name="caseSelect" aria-label="Test case" disabled>
+          <option>No file loaded</option>
+        </select>
+        <button type="button" id="btnNextCase" aria-keyshortcuts="Enter">Next case (Enter)</button>
+        <button type="button" id="btnClearInput">Clear input file</button>
+        <output id="caseInfo"></output>
       </fieldset>
 
       <fieldset aria-label="Execute">
-        <button type="button" id="btnNext">Next ▶</button>
+        <button type="button" id="btnNext">Next step ▶</button>
         <div class="row">
           <label for="stepCount">Step by</label>
           <input type="number" id="stepCount" name="stepCount" value="10" min="1">
