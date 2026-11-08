@@ -25,7 +25,5 @@ function countDistinct(points: readonly Point[]): number {
   return new Set(points.map((p) => `${p.x},${p.y}`)).size;
 }
 
-
-
 export type { Point, Segment };
 export { CANVAS_WIDTH, CANVAS_HEIGHT, EPS, samePoint, countDistinct };

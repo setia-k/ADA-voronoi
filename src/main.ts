@@ -1,6 +1,7 @@
-import { type Point, type Segment, CANVAS_WIDTH, CANVAS_HEIGHT, countDistinct, samePoint } from "./geometry.ts";
+import { type Point, type Segment, CANVAS_WIDTH, CANVAS_HEIGHT, samePoint } from "./geometry.ts";
 import { type InputFile, parseInputFile, formatOutputFile, parseOutputFile, saveTextFile } from "./fileio.ts";
-import { render } from "./renderer.ts";
+import { type Line, render } from "./renderer.ts";
+import { type Step, solveVoronoi } from "./voronoi.ts";
 
 function byId<T extends HTMLElement>(id: string): T {
   const element = document.getElementById(id);
@@ -25,6 +26,7 @@ const ui = {
   clearInput: byId<HTMLButtonElement>("btnClearInput"),
   caseInfo: byId<HTMLOutputElement>("caseInfo"),
   next: byId<HTMLButtonElement>("btnNext"),
+  stepCount: byId<HTMLInputElement>("stepCount"),
   stepBy: byId<HTMLButtonElement>("btnStepN"),
   run: byId<HTMLButtonElement>("btnRun"),
   reset: byId<HTMLButtonElement>("btnReset"),
@@ -45,21 +47,40 @@ type Source = "manual" | "case" | "editedCase" | "outputFile";
 const state = {
   points: [] as Point[],
   edges: [] as Segment[],
+  log: [] as Step[],
+  step: 0, // 0 = only the sites, k = log[k - 1]
   source: "manual" as Source,
   input: null as InputFile | null,
   caseIndex: -1,
 };
 
-/** Any change to the points resets the run and redraws everything. */
-function pointsChanged(edges: Segment[] = []): void {
-  state.edges = edges;
+/** Draws the current step and updates the step buttons. */
+function draw(): void {
   const fromOutputFile = state.source === "outputFile";
+  const last = state.log.length;
+  let lines: readonly Line[] = [];
+  if (fromOutputFile) lines = state.edges.map((e) => ({ ...e, color: "#000" }));
+  else if (state.step > 0) lines = state.log[state.step - 1].lines;
 
-  const totalSteps = Math.max(0, countDistinct(state.points) - 1);
-  ui.stepInfo.value = `Step 0 / ${totalSteps}`;
-  for (const button of [ui.next, ui.stepBy, ui.run, ui.reset]) {
-    button.disabled = fromOutputFile;
+  render(ctx, { sites: state.points, lines });
+  ui.stepInfo.value = `Step ${state.step} / ${last}`;
+  for (const button of [ui.next, ui.stepBy, ui.run]) {
+    button.disabled = fromOutputFile || state.step === last;
   }
+  ui.reset.disabled = fromOutputFile || state.step === 0;
+}
+
+function goToStep(step: number): void {
+  state.step = Math.min(state.log.length, Math.max(0, step));
+  draw();
+}
+
+/** Any change to the points reruns the algorithm and goes back to step 0. */
+function pointsChanged(loadedEdges: Segment[] = []): void {
+  const result = state.source === "outputFile" ? { edges: loadedEdges, log: [] } : solveVoronoi(state.points);
+  state.edges = result.edges;
+  state.log = result.log;
+  state.step = 0;
 
   ui.pointCount.value = `Points: ${state.points.length}`;
   ui.pointList.textContent = state.points.map((p) => `${p.x} ${p.y}`).join("\n");
@@ -67,7 +88,7 @@ function pointsChanged(edges: Segment[] = []): void {
   ui.clear.disabled = state.points.length === 0;
   ui.status.textContent = "";
 
-  render(ctx, { sites: state.points, edges: state.edges });
+  draw();
 }
 
 /** Mouse position in canvas coordinates: integers, clamped to the canvas. */
@@ -225,6 +246,13 @@ document.addEventListener("keydown", (event) => {
   event.preventDefault();
   ui.nextCase.click();
 });
+
+// ---- Steps ----
+
+ui.next.addEventListener("click", () => goToStep(state.step + 1));
+ui.stepBy.addEventListener("click", () => goToStep(state.step + Math.max(1, Number(ui.stepCount.value) || 1)));
+ui.run.addEventListener("click", () => goToStep(state.log.length));
+ui.reset.addEventListener("click", () => goToStep(0));
 
 // ---- Output file ----
 

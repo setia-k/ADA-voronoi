@@ -27,13 +27,10 @@ Browser app: HTML + TypeScript + esbuild. The spec translation is in `project_en
 ## Modules
 | File | Role |
 |---|---|
-| `main.ts` | DOM wiring and app state (the only DOM code, apart from `saveTextFile`) |
+| `main.ts` | DOM wiring and app state (the only DOM code, apart from `saveTextFile`). Calls `solve` when points change; Next / Step by N / Run / Reset only move `state.step` through the log. No Prev |
 | `geometry.ts` | Point, Segment, EPS, canvas size (600×600, which is also the clip box) |
-| `diagram.ts` | Edge list with adjacency: each edge has 2 sites and 2 endpoints (a vertex or a ray direction) |
-| `dc.ts` | Recursion down to 1 site, split at the median x (ties broken by y); returns the diagram and the convex hull |
-| `merge.ts` | Bridges (walk both hulls), trace the dividing chain HP, trim both sides |
-| `stepper.ts` | Live generator that yields before each merge. Total steps = distinct points − 1. No history, no Prev |
-| `renderer.ts` | Draws a plain `Scene` (sites and edges) on the canvas |
+| `voronoi.ts` | (user writes) The whole algorithm, bottom-up loop: each site starts as its own group, neighbouring groups merge in pairs each round. `solve(points)` returns `{ edges, log }`: final edges for the output file, and one picture (`Step = { lines }`) per step for the stepper. Edges are never moved, only deleted and born |
+| `renderer.ts` | Draws a plain `Scene` (sites and colored `Line`s) on the canvas |
 | `fileio.ts` | Parses input files (cases, stops at `0`), writes and reads output files (`P` then `E` lines, sorted lexically, CRLF) |
 
 ## Algorithm notes
