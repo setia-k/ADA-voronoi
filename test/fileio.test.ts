@@ -49,3 +49,11 @@ test("rounding happens before orienting and sorting", () => {
   ]);
   assert.equal(text, "E 100 10 100 50\r\n");
 });
+
+test("formatOutputFile clips rays to the canvas and drops edges outside it", () => {
+  const text = formatOutputFile([], [
+    { a: { x: 196, y: 271 }, b: { x: -9950791, y: 989551 } },
+    { a: { x: -1e7, y: -50 }, b: { x: 1e7, y: -50 } },
+  ]);
+  assert.deepEqual(text.trim().split("\r\n"), ["E 0 290 196 271"]);
+});

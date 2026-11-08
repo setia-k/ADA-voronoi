@@ -1,4 +1,4 @@
-import type { Point, Segment } from "./geometry.ts";
+import { type Point, type Segment, clipSegment } from "./geometry.ts";
 
 type InputFile = {
   readonly cases: readonly (readonly Point[])[];
@@ -50,14 +50,16 @@ function uniqueRows(rows: number[][]): number[][] {
 
 /**
  * Output format: "P x y" lines, then "E x1 y1 x2 y2" lines, both in lexical order.
- * Edges are rounded first, then oriented (x1 < x2, or x1 = x2 and y1 <= y2), then sorted,
- * so rounding can never break the order. Edges that round to a single point are dropped.
+ * Edges are clipped to the canvas, rounded, then oriented (x1 < x2, or x1 = x2 and y1 <= y2),
+ * then sorted, so rounding can never break the order. Edges that round to a single point are dropped.
  */
 function formatOutputFile(points: readonly Point[], edges: readonly Segment[]): string {
   const pointRows = uniqueRows(points.map((p) => [Math.round(p.x), Math.round(p.y)]));
 
   const edgeRows = uniqueRows(
     edges
+      .map((e) => clipSegment(e))
+      .filter((e) => e !== null)
       .map((e) => {
         const a = [Math.round(e.a.x), Math.round(e.a.y)];
         const b = [Math.round(e.b.x), Math.round(e.b.y)];
