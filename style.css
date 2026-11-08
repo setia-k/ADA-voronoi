@@ -1,0 +1,80 @@
+:root {
+  --gap: 16px;
+  --line: 1px solid #000;
+}
+
+body {
+  margin: 0;
+  padding: var(--gap);
+  box-sizing: border-box;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: sans-serif;
+  background: #fff;
+}
+
+#app {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--gap);
+}
+
+/* Same border and top edge as the fieldsets, so the top lines align */
+#canvas {
+  border: var(--line);
+  cursor: crosshair;
+}
+
+#sidebar {
+  width: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+fieldset {
+  margin: 0;
+  border: var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.row {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.row > button {
+  flex: 1;
+}
+
+#stepCount {
+  width: 4em;
+}
+
+#pointList {
+  height: 160px;
+  overflow-y: auto;
+  margin: 0;
+  font-family: monospace;
+}
+
+#status {
+  margin: 0;
+}
+
+/* Hidden on screen but still read by screen readers */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

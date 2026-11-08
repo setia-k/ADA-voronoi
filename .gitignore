@@ -1,11 +1,12 @@
 project_english.md
 
 # dev clutter 
-node_modules/
+.claude/
 .vscode/
 *.log
-Thumbs.db
 Desktop.ini
+node_modules/
+Thumbs.db
 
 # build.o
 dist/
@@ -13,3 +14,6 @@ dist/
 # dist
 *.zip
 *.rar
+
+# phase planning docs (local only)
+docs/

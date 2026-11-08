@@ -4,16 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --test \"test/**/*.test.ts\"",
     "typecheck": "tsc",
-    "build": "tsc && esbuild src/index.ts --bundle --format=iife --target=es2020 --outfile=dist/app.js",
-    "watch": "esbuild src/index.ts --bundle --format=iife --target=es2020 --outfile=dist/app.js --watch"
+    "build": "tsc && esbuild src/main.ts --bundle --format=iife --target=es2020 --outfile=dist/app.js",
+    "watch": "esbuild src/main.ts --bundle --format=iife --target=es2020 --outfile=dist/app.js --watch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "devDependencies": {
+    "@types/node": "^26.6.6",
     "esbuild": "^0.28.2",
     "typescript": "^7.0.2"
   }

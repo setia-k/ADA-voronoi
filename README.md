@@ -74,5 +74,6 @@ E 193 161 193 261
 📁 src/         ← TypeScript source 🧠
 📁 dist/        ← built app.js 📦
 📄 index.html   ← the app 🖥️
+📄 style.css    ← the looks 💅
 📄 run.bat      ← double-click me! 👆
 ```
