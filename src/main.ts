@@ -1,7 +1,7 @@
 import { type Point, type Segment, CANVAS_WIDTH, CANVAS_HEIGHT, samePoint } from "./geometry.ts";
 import { type InputFile, parseInputFile, formatOutputFile, parseOutputFile, saveTextFile } from "./fileio.ts";
 import { type Line, render } from "./renderer.ts";
-import { type Step, solveVoronoi } from "./voronoi.ts";
+import { type Step, distinct, solveVoronoi } from "./voronoi.ts";
 
 function byId<T extends HTMLElement>(id: string): T {
   const element = document.getElementById(id);
@@ -77,7 +77,7 @@ function goToStep(step: number): void {
 
 /** Any change to the points reruns the algorithm and goes back to step 0. */
 function pointsChanged(loadedEdges: Segment[] = []): void {
-  const result = state.source === "outputFile" ? { edges: loadedEdges, log: [] } : solveVoronoi(state.points);
+  const result = state.source === "outputFile" ? { edges: loadedEdges, log: [] } : solveVoronoi(distinct(state.points));
   state.edges = result.edges;
   state.log = result.log;
   state.step = 0;
